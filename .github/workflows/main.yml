@@ -1,0 +1,29 @@
+name: Run SpectrumAI Workflow
+
+on:
+  workflow_dispatch: # Bisa trigger manual dari GitHub UI
+
+jobs:
+  run-spectrumai:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install n8n
+        run: npm install -g n8n
+
+      - name: Run SpectrumAI workflow
+        run: |
+          # Import workflow
+          n8n import:workflow --input=workflows/spectrumai.json
+
+          # Jalankan workflow dengan input dari ENV
+          n8n execute --id 1 --input "{\"body\":{\"message\":\"${{ github.event.inputs.message }}\"}}"
+        env:
+          OPENAI_API_KEY: ${{ secrets.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 }}
