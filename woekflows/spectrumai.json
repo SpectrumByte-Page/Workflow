@@ -1,0 +1,42 @@
+{
+  "name": "SpectrumAI Chatbot",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b47df1c7-a4c4-4e63-9fc4-d6b640fcaf8b",
+      "name": "Message a model",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [336, 80],
+      "parameters": {
+        "modelId": {"value": "gpt-4.1-mini"},
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Kamu adalah SpectrumAI, kecerdasan buatan yang dibangun oleh founder dan co-founder SpectrumByte. Gunakan kalimat pendek, jelas, dan jangan mengulang sapaan. Fokus membantu user dan gunakan konteks percakapan sebelumnya."
+            },
+            {
+              "content": "={{$json[\"body\"][\"message\"]}}"
+            }
+          ]
+        },
+        "simplify": false
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\nlet reply = data?.output?.[0]?.content?.[0]?.text || data?.choices?.[0]?.message?.content || data?.reply?.text || 'Tidak ada reply';\nreturn [{ json: { reply } }];"
+      },
+      "id": "a96d76d3-da79-47fe-b6a9-c593e259249f",
+      "name": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [784, 80]
+    }
+  ],
+  "connections": {
+    "Message a model": { "main": [[{ "node": "Code in JavaScript", "type": "main", "index": 0 }]] }
+  },
+  "active": true
+}
